@@ -1,73 +1,120 @@
-# آزمایش BDD — ماشین‌حساب ضرب، تقسیم و توان
 
-> این README به‌صورت گزارش‌کار قابل تحویل نوشته شده است.  
-> نام و نام خانوادگی: `...`  
-> شماره دانشجویی: `...`  
-> لینک مخزن GitHub: `...`  
-> تاریخ انجام آزمایش: `...`
+<h1 dir="rtl" align="right">گزارش آزمایش BDD — ماشین‌حساب</h1>
 
-## 1) هدف آزمایش
+<p dir="rtl" align="right">
+<b>نام و نام خانوادگی:</b> علی نجار<br>
+<b>شماره دانشجویی:</b> 401102701<br>
+</p>
 
-هدف این آزمایش آشنایی عملی با **Behavior-Driven Development (BDD)** و تبدیل نیازمندی‌ها به سناریوهای قابل اجرا با استفاده از **Gherkin + Cucumber + JUnit + Maven** است.
+<hr>
 
-در مرحله نخست، مثال جمع دو عدد از مستند آزمایشگاه بازسازی می‌شود. سپس مشکل `undefined` در `Scenario Outline` تحلیل و اصلاح می‌شود. در مرحله اصلی، یک ماشین‌حساب برای عملیات `*`، `/` و `^` پیاده‌سازی می‌شود؛ ورودی‌های ماشین‌حساب دو عدد صحیح و یک عملگر هستند.
+<h2 dir="rtl" align="right">1. هدف آزمایش</h2>
 
----
+<p dir="rtl" align="right">
+هدف این آزمایش آشنایی عملی با <b>Behavior-Driven Development (BDD)</b> و تبدیل نیازمندی‌های متنی به سناریوهای قابل اجرا بود.
+در این روش، رفتار مورد انتظار سیستم ابتدا با زبان قابل فهم Gherkin و ساختار
+<code>Given / When / Then</code> توصیف شده و سپس این مراحل به کد Java متصل می‌شوند.
+</p>
 
-## 2) ابزارها و فناوری‌ها
+<p dir="rtl" align="right">
+آزمایش در دو بخش اصلی انجام شد:
+</p>
 
-- IntelliJ IDEA
-- Java
-- Maven
-- JUnit 4.12
-- Cucumber-JVM 1.2.5
-- Gherkin
-- Git / GitHub
-- GitHub Projects (Kanban)
+<ol dir="rtl">
+  <li>بازسازی مثال جمع دو عدد موجود در دستورکار و بررسی <code>Scenario Outline</code>.</li>
+  <li>پیاده‌سازی ماشین‌حساب برای عملیات ضرب (<code>*</code>)، تقسیم (<code>/</code>) و توان (<code>^</code>) و نوشتن تست‌های BDD برای آن.</li>
+</ol>
 
-نسخه‌های Cucumber و JUnit در این پروژه عمداً مطابق مثال آزمایشگاه نگه داشته شده‌اند تا رفتار مستند قابل بازتولید باشد.
+<p dir="rtl" align="right">
+در بخش اول علاوه بر اجرای سناریوی معمولی، یک مشکل <code>undefined</code> در ورودی منفی بررسی و رفع شد.
+در بخش دوم نیز سناریوهای معمولی و Outline برای عملیات خواسته‌شده نوشته شدند و در نهایت تمام تست‌ها با Maven با موفقیت اجرا شدند.
+</p>
 
----
+<hr>
 
-## 3) ساختار پروژه
+<h2 dir="rtl" align="right">2. ساختار پروژه</h2>
+
+<p dir="rtl" align="right">
+ساختار کلی پروژه به صورت زیر است:
+</p>
 
 ```text
-SELab-BDD-Calculator/
+.
+├── assets/
+│   ├── 1.png
+│   ├── 2.png
+│   ├── 3.png
+│   └── 4.png
 ├── pom.xml
 ├── README.md
-├── .gitignore
-└── src
-    ├── main
-    │   └── java
-    │       └── calculator
+└── src/
+    ├── main/
+    │   └── java/
+    │       └── calculator/
     │           └── Calculator.java
-    └── test
-        ├── java
-        │   └── calculator
+    └── test/
+        ├── java/
+        │   └── calculator/
         │       ├── MyStepdefs.java
         │       └── RunnerTest.java
-        └── resources
-            └── features
+        └── resources/
+            └── features/
                 ├── addition.feature
                 └── calculator.feature
 ```
 
----
+<p dir="rtl" align="right">
+کد اصلی برنامه در <code>src/main/java</code> قرار دارد و سناریوهای BDD و کدهای مربوط به تست در <code>src/test</code> نگهداری می‌شوند.
+</p>
 
-## 4) بازسازی مثال مستند آزمایشگاه
+<hr>
 
-ابتدا پروژه Maven ساخته شد و dependencyهای Cucumber و JUnit به `pom.xml` اضافه شدند. سپس مسیر `src/test/resources` به‌عنوان Test Resource Root و مسیر `features` برای فایل‌های Gherkin در نظر گرفته شد.
+<h2 dir="rtl" align="right">3. بخش اول — پیاده‌سازی مثال جمع دو عدد</h2>
 
-### سناریوی عادی جمع
+<p dir="rtl" align="right">
+در قدم اول، سناریوی ساده جمع دو عدد مطابق مثال دستورکار نوشته شد:
+</p>
 
 ```gherkin
-Scenario: add two numbers
-  Given Two input values, 1 and 2
-  When I add the two values
-  Then I expect the result 3
+Feature: Calculator
+
+  Scenario: add two numbers
+    Given Two input values, 1 and 2
+    When I add the two values
+    Then I expect the result 3
 ```
 
-### Scenario Outline جمع
+<p dir="rtl" align="right">
+کلاس اصلی در ابتدا فقط متد جمع را داشت:
+</p>
+
+```java
+package calculator;
+
+public class Calculator {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+<p dir="rtl" align="right">
+برای اتصال عبارت‌های Gherkin به Java، Step Definitionهای مربوط به Given، When و Then نوشته شدند.
+در این مرحله اجرای اولیه تست با Maven موفق بود.
+</p>
+
+<p align="center">
+  <img src="assets/1.png" alt="Initial Maven build success" width="95%">
+</p>
+
+<hr>
+
+<h2 dir="rtl" align="right">4. Scenario Outline و مشکل undefined</h2>
+
+<p dir="rtl" align="right">
+بعد از موفقیت سناریوی ساده، Scenario Outline زیر به feature مربوط به جمع اضافه شد:
+</p>
 
 ```gherkin
 Scenario Outline: add two numbers
@@ -82,65 +129,95 @@ Scenario Outline: add two numbers
     | 2     | 2      | 4      |
 ```
 
----
+<h3 dir="rtl" align="right">5.1. علت بروز undefined</h3>
 
-## 5) تحلیل مشکل undefined در Scenario Outline
-
-در نسخه اولیه Step Definition، الگوی عددی به این شکل بود:
+<p dir="rtl" align="right">
+Step Definition اولیه برای دریافت ورودی‌ها به صورت زیر بود:
+</p>
 
 ```java
 @Given("^Two input values, (\\d+) and (\\d+)$")
+public void twoInputValuesAnd(int arg0, int arg1) {
+    value1 = arg0;
+    value2 = arg1;
+}
 ```
 
-عبارت `\d+` فقط رقم‌های بدون علامت را می‌پذیرد. بنابراین سطر زیر از Examples با Step Definition تطبیق داده نمی‌شود:
+<p dir="rtl" align="right">
+عبارت منظم <code>\d+</code> تنها یک یا چند رقم را match می‌کند و علامت منفی را نمی‌پذیرد.
+بنابراین در Example مربوط به <code>-1</code>، عبارت
+<code>Given Two input values, -1 and 6</code>
+با Step Definition بالا تطبیق پیدا نمی‌کرد و Cucumber آن را به صورت <code>undefined</code> گزارش می‌کرد.
+</p>
 
-```text
-| -1 | 6 | 5 |
-```
+<p align="center">
+  <img src="assets/2.png" alt="Addition scenarios failing before regex fix" width="95%">
+</p>
 
-در نتیجه Step مربوط به `Given Two input values, -1 and 6` به‌صورت `undefined` گزارش می‌شود.
+<h3 dir="rtl" align="right">5.2. رفع مشکل</h3>
 
-### اصلاح
-
-الگوی ورودی به شکل زیر تغییر داده شد:
+<p dir="rtl" align="right">
+برای پشتیبانی از عدد منفی، علامت منفی به صورت اختیاری به regex اضافه شد:
+</p>
 
 ```java
 @Given("^Two input values, (-?\\d+) and (-?\\d+)$")
+public void twoInputValuesAnd(int arg0, int arg1) {
+    value1 = arg0;
+    value2 = arg1;
+}
 ```
 
-قسمت `-?` یعنی علامت منفی اختیاری است؛ پس هم اعداد مثبت و هم منفی پذیرفته می‌شوند.
+<p dir="rtl" align="right">
+در عبارت <code>-?</code>، کاراکتر <code>?</code> به این معناست که علامت منفی می‌تواند صفر یا یک بار وجود داشته باشد.
+در نتیجه هم اعداد مثبت و هم اعداد منفی توسط همان Step Definition پذیرفته می‌شوند.
+</p>
 
-برای اینکه خروجی منفی یا اعشاری نیز در تست‌های ماشین‌حساب قابل بررسی باشد، Step نتیجه نیز به شکل زیر نوشته شد:
+<p dir="rtl" align="right">
+بعد از این اصلاح، اجرای Scenario و Scenario Outline مربوط به مثال جمع بدون خطا انجام شد:
+</p>
 
-```java
-@Then("^I expect the result (-?\\d+(?:\\.\\d+)?)$")
-```
+<p align="center">
+  <img src="assets/3.png" alt="Addition scenarios passing after regex fix" width="95%">
+</p>
 
----
+<p dir="rtl" align="right">
+در این مرحله Maven تعداد 16 تست ثبت‌شده توسط Surefire را با
+<code>Failures: 0</code>،
+<code>Errors: 0</code> و
+<code>Skipped: 0</code>
+گزارش کرد.
+</p>
 
-## 6) نیازمندی مسئله اصلی
+<hr>
 
-ماشین‌حساب دو عدد صحیح و یک عملگر از مجموعه زیر دریافت می‌کند:
+<h2 dir="rtl" align="right">6. بخش دوم — ماشین‌حساب ضرب، تقسیم و توان</h2>
 
-- `*` ضرب
-- `/` تقسیم
-- `^` توان
+<p dir="rtl" align="right">
+در بخش اصلی مسئله، ماشین‌حساب باید دو عدد صحیح و یک عملگر دریافت کرده و یکی از عملیات زیر را انجام دهد:
+</p>
 
-عمل توان بدون `Math.pow` و با **ضرب تکراری** پیاده‌سازی شده است.
+<ul dir="rtl">
+  <li><code>*</code> برای ضرب</li>
+  <li><code>/</code> برای تقسیم</li>
+  <li><code>^</code> برای توان</li>
+</ul>
 
-نمونه‌های الزامی مسئله:
+<p dir="rtl" align="right">
+نمونه‌های اصلی خواسته‌شده در صورت مسئله:
+</p>
 
-| first | second | opt | result |
+<div dir="rtl">
+
+| ورودی اول | ورودی دوم | عملگر | نتیجه |
 |---:|---:|:---:|---:|
 | 6 | 2 | `*` | 12 |
 | 6 | 2 | `/` | 3 |
 | 6 | 2 | `^` | 36 |
 
----
+</div>
 
-## 7) سناریوهای عادی
-
-برای هر عملگر حداقل یک سناریوی عادی نوشته شده است:
+<h3 dir="rtl" align="right">6.1. سناریوهای معمولی</h3>
 
 ```gherkin
 Scenario: multiply two integers
@@ -153,15 +230,18 @@ Scenario: divide two integers
   When I press the / key
   Then I expect the result 3
 
-Scenario: raise an integer to a power
+Scenario: raise a number to a power
   Given Two input values, 6 and 2
   When I press the ^ key
   Then I expect the result 36
 ```
 
----
+<h3 dir="rtl" align="right">6.2. Scenario Outline</h3>
 
-## 8) Scenario Outline مسئله اصلی
+<p dir="rtl" align="right">
+برای جلوگیری از تکرار یک سناریوی یکسان با داده‌های مختلف، از Scenario Outline استفاده شد.
+در این حالت بدنه سناریو یک بار نوشته می‌شود و داده‌ها از جدول Examples تأمین می‌شوند.
+</p>
 
 ```gherkin
 Scenario Outline: calculate two integer inputs
@@ -174,224 +254,268 @@ Scenario Outline: calculate two integer inputs
     | 6     | 2      | *   | 12     |
     | 6     | 2      | /   | 3      |
     | 6     | 2      | ^   | 36     |
-    | -6    | 2      | *   | -12    |
-    | -6    | -2     | *   | 12     |
-    | 0     | 5      | *   | 0      |
-    | 7     | 2      | /   | 3.5    |
-    | -6    | 2      | /   | -3     |
-    | 2     | 0      | ^   | 1      |
-    | -2    | 3      | ^   | -8     |
-    | 2     | -2     | ^   | 0.25   |
 ```
 
-یک سناریوی جداگانه برای تقسیم بر صفر نیز در نظر گرفته شده است:
+<p dir="rtl" align="right">
+علاوه بر نمونه‌های اصلی، برای پوشش بهتر رفتار سیستم می‌توان/در پروژه از حالت‌هایی مانند اعداد منفی، صفر،
+تقسیم با نتیجه اعشاری، توان صفر و تقسیم بر صفر نیز استفاده کرد.
+</p>
 
-```gherkin
-Scenario: division by zero
-  Given Two input values, 6 and 0
-  When I press the / key
-  Then I expect a division by zero error
+<hr>
+
+<h2 dir="rtl" align="right">7. پیاده‌سازی Calculator</h2>
+
+<p dir="rtl" align="right">
+کلاس Calculator منطق اصلی برنامه را نگهداری می‌کند. عملیات ضرب و تقسیم به صورت مستقیم پیاده‌سازی شده‌اند.
+در تقسیم، تبدیل به <code>double</code> باعث می‌شود نتیجه‌هایی مانند <code>7 / 2 = 3.5</code> از بین نروند.
+</p>
+
+```java
+public double multiply(int a, int b) {
+    return (double) a * b;
+}
+
+public double divide(int a, int b) {
+    if (b == 0) {
+        throw new ArithmeticException("Division by zero is not allowed");
+    }
+
+    return (double) a / b;
+}
 ```
 
----
+<h3 dir="rtl" align="right">7.1. پیاده‌سازی توان با ضرب تکراری</h3>
 
-## 9) پیاده‌سازی Calculator
+<p dir="rtl" align="right">
+طبق صورت مسئله، برای محاسبه توان از <code>Math.pow</code> استفاده نشد و توان با ضرب تکراری پیاده‌سازی شد.
+برای مثال، محاسبه <code>6^3</code> به صورت
+<code>1 × 6 × 6 × 6</code>
+انجام می‌شود.
+</p>
 
-فایل:
+```java
+public double power(int base, int exponent) {
+    if (base == 0 && exponent < 0) {
+        throw new ArithmeticException(
+                "Zero cannot be raised to a negative power"
+        );
+    }
 
-```text
-src/main/java/calculator/Calculator.java
+    if (exponent == 0) {
+        return 1.0;
+    }
+
+    long exp = exponent;
+    boolean negativeExponent = exp < 0;
+
+    if (negativeExponent) {
+        exp = -exp;
+    }
+
+    double result = 1.0;
+
+    for (long i = 0; i < exp; i++) {
+        result *= base;
+    }
+
+    return negativeExponent ? 1.0 / result : result;
+}
 ```
 
-نکات مهم پیاده‌سازی:
+<p dir="rtl" align="right">
+متد مرکزی Calculator نیز با توجه به عملگر، عملیات مناسب را انتخاب می‌کند:
+</p>
 
-1. ضرب با عملگر `*` انجام می‌شود.
-2. تقسیم برای جلوگیری از integer division به `double` تبدیل می‌شود.
-3. تقسیم بر صفر `ArithmeticException` ایجاد می‌کند.
-4. توان با حلقه و ضرب تکراری پیاده‌سازی شده و از `Math.pow` استفاده نشده است.
-5. برای توان منفی، ابتدا توان مثبت با ضرب ساخته شده و سپس معکوس آن برگردانده می‌شود.
-6. عملگر ناشناخته با `IllegalArgumentException` رد می‌شود.
-
----
-
-## 10) Step Definitions
-
-فایل:
-
-```text
-src/test/java/calculator/MyStepdefs.java
+```java
+public double calculate(int first, int second, char operator) {
+    switch (operator) {
+        case '*':
+            return multiply(first, second);
+        case '/':
+            return divide(first, second);
+        case '^':
+            return power(first, second);
+        default:
+            throw new IllegalArgumentException(
+                    "Unsupported operator: " + operator
+            );
+    }
+}
 ```
 
-در Step Definitions، عبارت‌های Gherkin به کد Java متصل می‌شوند. Hook از نوع `@Before` قبل از هر Scenario یک نمونه تازه از Calculator می‌سازد تا سناریوها به یکدیگر وابسته نباشند.
+<hr>
 
-Stepهای اصلی عبارت‌اند از:
+<h2 dir="rtl" align="right">8. Step Definitions</h2>
+
+<p dir="rtl" align="right">
+Step Definitionها واسط بین جملات Gherkin و کد Java هستند.
+به بیان ساده، Cucumber متن هر Step را می‌خواند و با استفاده از regex، متد Java متناظر را پیدا می‌کند.
+</p>
+
+<p dir="rtl" align="right">
+نمونه Step دریافت ورودی:
+</p>
 
 ```java
 @Given("^Two input values, (-?\\d+) and (-?\\d+)$")
-@When("^I add the two values$")
+public void twoInputValuesAnd(int arg0, int arg1) {
+    value1 = arg0;
+    value2 = arg1;
+}
+```
+
+<p dir="rtl" align="right">
+نمونه Step انتخاب عملگر:
+</p>
+
+```java
 @When("^I press the ([*/^]) key$")
+public void iPressTheOperatorKey(String operator) {
+    result = calculator.calculate(
+            value1,
+            value2,
+            operator.charAt(0)
+    );
+}
+```
+
+<p dir="rtl" align="right">
+نمونه بررسی نتیجه:
+</p>
+
+```java
 @Then("^I expect the result (-?\\d+(?:\\.\\d+)?)$")
-@Then("^I expect a division by zero error$")
+public void iExpectTheResult(double expected) {
+    Assert.assertEquals(expected, result, 1e-9);
+}
 ```
 
----
+<p dir="rtl" align="right">
+در regex بالا بخش اعشاری اختیاری است؛ بنابراین نتیجه‌هایی مانند
+<code>12</code>،
+<code>-8</code>،
+<code>3.5</code> و
+<code>0.25</code>
+قابل بررسی هستند.
+</p>
 
-## 11) Runner
+<hr>
 
-فایل:
+<h2 dir="rtl" align="right">9. Hook از نوع Before</h2>
 
-```text
-src/test/java/calculator/RunnerTest.java
+<p dir="rtl" align="right">
+از Annotation مربوط به <code>@Before</code> استفاده شد تا قبل از اجرای هر Scenario، یک Calculator جدید ساخته شود.
+این کار باعث می‌شود Scenarioها مستقل از یکدیگر باشند و state باقی‌مانده از تست قبلی روی تست بعدی اثر نگذارد.
+</p>
+
+```java
+@Before
+public void before() {
+    calculator = new Calculator();
+}
 ```
 
-Runner با JUnit اجرا می‌شود:
+<hr>
+
+<h2 dir="rtl" align="right">10. Runner و اجرای تست‌ها</h2>
+
+<p dir="rtl" align="right">
+برای اجرای featureها از Cucumber Runner مبتنی بر JUnit استفاده شد:
+</p>
 
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    features = "src/test/resources/features",
-    glue = "calculator",
-    monochrome = true
+        features = "src/test/resources/features",
+        glue = "calculator",
+        monochrome = true
 )
 public class RunnerTest {
 }
 ```
 
-قرار دادن `features` باعث می‌شود Cucumber فایل‌های feature را از مسیر مشخص‌شده پیدا کند. `glue` نیز package مربوط به Step Definitions را تعیین می‌کند.
+<p dir="rtl" align="right">
+گزینه <code>features</code> مسیر فایل‌های Gherkin و گزینه <code>glue</code> package مربوط به Step Definitionها را تعیین می‌کند.
+</p>
 
----
-
-## 12) اجرای پروژه
-
-در ریشه پروژه:
+<p dir="rtl" align="right">
+دستور نهایی اجرای تست‌ها:
+</p>
 
 ```bash
 mvn clean test
 ```
 
-یا در IntelliJ:
+<p dir="rtl" align="right">
+خروجی نهایی پروژه نشان می‌دهد Maven/Surefire تعداد 76 تست را بدون Failure، Error یا Skip اجرا کرده است:
+</p>
 
-1. Maven را باز کنید.
-2. Lifecycle → `test` را اجرا کنید.
-3. یا روی `RunnerTest` راست‌کلیک و Run را انتخاب کنید.
+<p align="center">
+  <img src="assets/4.png" alt="Final Maven test result - 76 tests, all passing" width="95%">
+</p>
 
-شرط تحویل: تمام Scenarioها باید Pass باشند و خروجی اجرای تست در گزارش قابل مشاهده باشد.
-
----
-
-## 13) شواهدی که باید در گزارش قرار دهم
-
-در نسخه نهایی گزارش، این تصاویر اضافه می‌شوند:
-
-1. ساختار پروژه در IntelliJ.
-2. بخش dependencyهای `pom.xml`.
-3. `addition.feature` قبل از رفع مشکل و خروجی `undefined`.
-4. خط Step Definition قدیمی با `\d+`.
-5. نسخه اصلاح‌شده با `-?\d+`.
-6. خروجی Pass شدن Scenario Outline مثال.
-7. فایل `calculator.feature`.
-8. کلاس `Calculator`.
-9. فایل `MyStepdefs`.
-10. `RunnerTest`.
-11. خروجی `mvn clean test` یا Run از IntelliJ.
-12. GitHub repository و تاریخچه commitها.
-13. GitHub Projects / Kanban در حالت نهایی.
-
----
-
-## 14) GitHub و Kanban
-
-برای انجام انفرادی پروژه، همچنان از Issue، Branch، Pull Request و Project Board استفاده می‌شود تا روند مهندسی نرم‌افزار قابل مشاهده باشد.
-
-ستون‌های پیشنهادی Kanban:
+<p dir="rtl" align="right">
+خلاصه خروجی نهایی:
+</p>
 
 ```text
-Backlog → Todo → In Progress → Review/Test → Done
+Tests run: 76
+Failures: 0
+Errors: 0
+Skipped: 0
+
+BUILD SUCCESS
 ```
 
-Issueهای پیشنهادی:
+<hr>
 
-```text
-#1  Setup Maven project and dependencies
-#2  Reproduce BDD addition example
-#3  Reproduce and fix undefined Scenario Outline
-#4  Implement multiplication
-#5  Implement division
-#6  Implement power using repeated multiplication
-#7  Write normal Gherkin scenarios
-#8  Write Scenario Outline and edge cases
-#9  Configure Cucumber Runner and run Maven tests
-#10 Complete README, screenshots and final report
-```
 
-برای هر Issue یک branch جدا ساخته می‌شود؛ مثلا:
+<hr>
 
-```bash
-git checkout -b fix/negative-number-step
-```
+<h2 dir="rtl" align="right">17. استفاده از ابزارهای هوش مصنوعی</h2>
 
-پس از انجام کار:
+<p dir="rtl" align="right">
+در انجام این آزمایش از ابزار هوش مصنوعی <b>ChatGPT</b> به عنوان دستیار کمکی در فرایند توسعه و مستندسازی استفاده شد.
+هدف از استفاده از هوش مصنوعی، دریافت توضیح درباره مفاهیم، بررسی خطاها، پیشنهاد راه‌حل و کمک به ساختاردهی گزارش بود و
+نتایج نهایی به صورت عملی در محیط توسعه بررسی و آزمایش شدند.
+</p>
 
-```bash
-git add .
-git commit -m "fix: support signed integers in BDD step definitions"
-git push -u origin fix/negative-number-step
-```
+<p dir="rtl" align="right">
+موارد اصلی استفاده از هوش مصنوعی در این پروژه شامل موارد زیر بود:
+</p>
 
-سپس یک Pull Request به `main` ایجاد می‌شود و در توضیح PR نوشته می‌شود:
+<ul dir="rtl">
+  <li>
+    توضیح مفاهیم BDD، Gherkin، Scenario، Scenario Outline، Step Definition و نقش
+    Given / When / Then.
+  </li>
 
-```text
-Closes #3
-```
+  <li>
+    کمک به تحلیل مشکل <code>undefined</code> در Scenario Outline و بررسی عبارت منظم
+    مربوط به اعداد منفی.
+  </li>
 
-پس از merge، Issue به Done منتقل می‌شود.
+  <li>
+    پیشنهاد ساختار مناسب برای فایل‌های پروژه و نحوه سازمان‌دهی
+    <code>main</code>،
+    <code>test</code>،
+    <code>features</code>
+    و Step Definitionها.
+  </li>
 
----
+  <li>
+    بررسی و پیشنهاد موارد تست برای عملیات ضرب، تقسیم و توان، از جمله برخی حالت‌های مرزی.
+  </li>
 
-## 15) نمونه توالی commitها
+  <li>
+    کمک به تهیه و ساختاردهی فایل README و گزارش نهایی آزمایش.
+  </li>
 
-```text
-chore: initialize Maven BDD project
-test: add laboratory addition feature
-test: add addition step definitions
-fix: support signed integers in BDD steps
-feat: implement multiplication
-feat: implement division
-feat: implement power with repeated multiplication
-test: add normal calculator scenarios
-test: add calculator scenario outline and edge cases
-test: add Cucumber JUnit runner
-docs: complete README and report evidence
-```
+  <li>
+    پیشنهاد شیوه استفاده از Git، GitHub Issues و GitHub Projects/Kanban برای مدیریت مراحل انجام پروژه.
+  </li>
+</ul>
 
----
-
-## 16) نتیجه‌گیری
-
-در این آزمایش، نیازمندی‌های رفتاری ابتدا به زبان Gherkin نوشته شدند و سپس با Step Definitions به کد Java متصل شدند. مشکل `undefined` در Scenario Outline به علت عدم پذیرش علامت منفی در regex شناسایی و با `-?\d+` اصلاح شد. پس از آن، عملیات ضرب، تقسیم و توان پیاده‌سازی شدند و هر سه عملگر هم با Scenarioهای عادی و هم با Scenario Outline مورد آزمون قرار گرفتند.
-
-توان بدون `Math.pow` و با ضرب تکراری پیاده‌سازی شده است. همچنین حالت‌های مرزی مانند اعداد منفی، صفر، تقسیم غیرصحیح، توان صفر، توان منفی و تقسیم بر صفر نیز پوشش داده شده‌اند.
-
----
-
-## 17) چک‌لیست تحویل
-
-- [ ] پروژه Maven بدون خطا build می‌شود.
-- [ ] `mvn clean test` موفق است.
-- [ ] مثال جمع مستند اجرا شده است.
-- [ ] خطای `undefined` بازتولید شده است.
-- [ ] علت خطا در چند خط توضیح داده شده است.
-- [ ] regex برای اعداد منفی اصلاح شده است.
-- [ ] Scenario عادی برای `*` وجود دارد.
-- [ ] Scenario عادی برای `/` وجود دارد.
-- [ ] Scenario عادی برای `^` وجود دارد.
-- [ ] Scenario Outline شامل سه مثال اصلی مسئله است.
-- [ ] Step Definitions کامل‌اند.
-- [ ] کد `Calculator` کامل است.
-- [ ] توان با ضرب تکراری نوشته شده است.
-- [ ] Runner درست تنظیم شده است.
-- [ ] همه تست‌ها Pass هستند.
-- [ ] README شامل توضیح مراحل، کد، نتیجه و تصاویر است.
-- [ ] GitHub repository مرتب است.
-- [ ] Kanban/Project Board تکمیل شده است.
-- [ ] Issueها، branchها، commitها و PRها روند انجام کار را نشان می‌دهند.
+<p dir="rtl" align="right">
+فایل چت در AI_AGENT.md قرار دارد.
+</p>
