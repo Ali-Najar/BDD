@@ -20,7 +20,7 @@ public class MyStepdefs {
 
     // Deliberately still uses \\d+ at this stage.
     // We have NOT reached the Scenario Outline / negative-number fix yet.
-    @Given("^Two input values, (\\d+) and (\\d+)$")
+    @Given("^Two input values, (-?\\d+) and (-?\\d+)$")
     public void twoInputValuesAnd(int arg0, int arg1) {
         value1 = arg0;
         value2 = arg1;
